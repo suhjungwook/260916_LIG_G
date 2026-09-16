@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LIG DNA TaskFlow - 스마트 업무 관리 시스템</title>
+    <meta name="description" content="LIG DNA를 위한 모던하고 직관적인 스마트 할 일 및 업무 관리 웹 애플리케이션">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="app-background">
+        <div class="glow-orb orb-1"></div>
+        <div class="glow-orb orb-2"></div>
+        <div class="glow-orb orb-3"></div>
+    </div>
+
+    <div class="app-wrapper">
+        <!-- Top Navigation Header -->
+        <header class="app-header">
+            <div class="header-brand">
+                <div class="logo-box">
+                    <svg class="dna-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M2 15c6.667-6 13.333 0 20-6"></path>
+                        <path d="M9 22c1.798-1.998 2.518-3.995 2.807-5.993"></path>
+                        <path d="M15 2c-1.798 1.998-2.518 3.995-2.807 5.993"></path>
+                        <path d="M17 6l-2.5-2.5"></path>
+                        <path d="M14 8l-1-1"></path>
+                        <path d="M7 18l2.5 2.5"></path>
+                        <path d="M3.5 14.5l.5.5"></path>
+                        <path d="M20 9.5l.5.5"></path>
+                        <path d="M6.5 12.5l1 1"></path>
+                        <path d="M16.5 10.5l1 1"></path>
+                        <path d="M10 16l1.5 1.5"></path>
+                    </svg>
+                </div>
+                <div class="brand-text">
+                    <div class="brand-badge">LIG DNA WORKSPACE</div>
+                    <h1 class="brand-title">TaskFlow <span>AI</span></h1>
+                </div>
+            </div>
+
+            <div class="header-actions">
+                <div class="date-badge" id="currentDateDisplay">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                    <span id="dateText">2026.09.16</span>
+                </div>
+                <button id="themeToggleBtn" class="action-btn icon-btn" title="다크/라이트 모드 전환" aria-label="테마 전환">
+                    <svg class="theme-icon sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                    <svg class="theme-icon moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                </button>
+            </div>
+        </header>
+
+        <!-- Stats Metric Cards -->
+        <section class="stats-container">
+            <div class="stat-card">
+                <div class="stat-icon total-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                </div>
+                <div class="stat-info">
+                    <span class="stat-label">전체 업무</span>
+                    <span class="stat-value" id="statTotal">0</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon pending-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                </div>
+                <div class="stat-info">
+                    <span class="stat-label">진행 중</span>
+                    <span class="stat-value" id="statPending">0</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon completed-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                </div>
+                <div class="stat-info">
+                    <span class="stat-label">완료됨</span>
+                    <span class="stat-value" id="statCompleted">0</span>
+                </div>
+            </div>
+
+            <div class="stat-card progress-card">
+                <div class="progress-header">
+                    <span class="stat-label">달성률</span>
+                    <span class="progress-pct" id="statRate">0%</span>
+                </div>
+                <div class="progress-bar-track">
+                    <div class="progress-bar-fill" id="statProgressBar" style="width: 0%"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Workspace Container -->
+        <main class="main-content">
+            <!-- New Todo Creation Box -->
+            <section class="creation-panel">
+                <form id="todoForm" class="todo-form">
+                    <div class="input-primary-row">
+                        <div class="text-input-wrapper">
+                            <input 
+                                type="text" 
+                                id="todoInput" 
+                                class="todo-main-input" 
+                                placeholder="새로운 LIG DNA 업무 또는 할 일을 입력하세요... (Enter로 등록)" 
+                                autocomplete="off"
+                                required
+                            />
+                        </div>
+                        <button type="submit" class="btn-primary" id="addBtn">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                            <span>등록하기</span>
+                        </button>
+                    </div>
+
+                    <div class="input-meta-row">
+                        <!-- Category Selector -->
+                        <div class="meta-item">
+                            <label for="categorySelect">카테고리</label>
+                            <select id="categorySelect" class="custom-select">
+                                <option value="업무">💼 업무</option>
+                                <option value="기획">📊 기획</option>
+                                <option value="개발">💻 개발</option>
+                                <option value="연구">🔬 연구</option>
+                                <option value="기타">📌 기타</option>
+                            </select>
+                        </div>
+
+                        <!-- Priority Selector -->
+                        <div class="meta-item">
+                            <label for="prioritySelect">우선순위</label>
+                            <select id="prioritySelect" class="custom-select">
+                                <option value="보통">🟡 보통</option>
+                                <option value="높음">🔴 긴급/높음</option>
+                                <option value="낮음">🟢 낮음</option>
+                            </select>
+                        </div>
+
+                        <!-- Due Date -->
+                        <div class="meta-item">
+                            <label for="dueDateInput">마감일</label>
+                            <input type="date" id="dueDateInput" class="custom-date-input" />
+                        </div>
+                    </div>
+                </form>
+            </section>
+
+            <!-- Filter & Search Toolbar -->
+            <section class="toolbar-panel">
+                <div class="tab-filters">
+                    <button class="filter-tab active" data-filter="all">전체 <span class="tab-count" id="countAll">0</span></button>
+                    <button class="filter-tab" data-filter="active">진행중 <span class="tab-count" id="countActive">0</span></button>
+                    <button class="filter-tab" data-filter="completed">완료 <span class="tab-count" id="countCompleted">0</span></button>
+                    <button class="filter-tab" data-filter="high">🔥 긴급</button>
+                </div>
+
+                <div class="toolbar-right">
+                    <div class="search-box">
+                        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                        <input type="text" id="searchInput" placeholder="업무 검색..." />
+                        <button id="clearSearchBtn" class="clear-search-btn" style="display:none;">&times;</button>
+                    </div>
+
+                    <select id="filterCategory" class="custom-select filter-select">
+                        <option value="all">모든 카테고리</option>
+                        <option value="업무">업무</option>
+                        <option value="기획">기획</option>
+                        <option value="개발">개발</option>
+                        <option value="연구">연구</option>
+                        <option value="기타">기타</option>
+                    </select>
+
+                    <button id="clearCompletedBtn" class="btn-subtle" title="완료된 항목 일괄 삭제">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                        <span>완료 정리</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Todo List Card Container -->
+            <section class="todo-list-container">
+                <div id="todoList" class="todo-list">
+                    <!-- Dynamic Todo Items Rendered Here -->
+                </div>
+
+                <!-- Empty State Placeholder -->
+                <div id="emptyState" class="empty-state" style="display: none;">
+                    <div class="empty-icon-wrap">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+                    </div>
+                    <h3>등록된 업무가 없습니다</h3>
+                    <p>상단 입력창을 통해 새로운 LIG DNA 업무를 추가해 보세요!</p>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="app-footer">
+            <p>© 2026 LIG DNA TODO APP • Powered by Python Flask & Modern Web Tech</p>
+        </footer>
+    </div>
+
+    <!-- Edit Task Modal -->
+    <div id="editModal" class="modal-backdrop">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>업무 정보 수정</h3>
+                <button id="closeModalBtn" class="close-btn">&times;</button>
+            </div>
+            <form id="editForm">
+                <input type="hidden" id="editTodoId" />
+                <div class="form-group">
+                    <label for="editTitle">업무 내용</label>
+                    <input type="text" id="editTitle" class="custom-input" required />
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editCategory">카테고리</label>
+                        <select id="editCategory" class="custom-select">
+                            <option value="업무">💼 업무</option>
+                            <option value="기획">📊 기획</option>
+                            <option value="개발">💻 개발</option>
+                            <option value="연구">🔬 연구</option>
+                            <option value="기타">📌 기타</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="editPriority">우선순위</label>
+                        <select id="editPriority" class="custom-select">
+                            <option value="높음">🔴 긴급/높음</option>
+                            <option value="보통">🟡 보통</option>
+                            <option value="낮음">🟢 낮음</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="editDueDate">마감일</label>
+                    <input type="date" id="editDueDate" class="custom-date-input" />
+                </div>
+                <div class="modal-actions">
+                    <button type="button" id="cancelModalBtn" class="btn-subtle">취소</button>
+                    <button type="submit" class="btn-primary">저장하기</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- Main Logic Script -->
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
